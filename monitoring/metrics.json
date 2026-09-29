@@ -1,0 +1,11 @@
+{
+  "requestsPerSecond": 1800,
+  "activeUsers": 100,
+  "responseTime": 200,
+  "errorRate": 1,
+  "servers": {
+    "Server A": 40,
+    "Server B": 35,
+    "Server C": 45
+  }
+}

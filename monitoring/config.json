@@ -1,0 +1,10 @@
+{
+  "surgeMultiplier": 1.5,
+  "capacity": 1800,
+
+  "statusThresholds": {
+    "normal": 60,
+    "warning": 80,
+    "highLoad": 90
+  }
+}
