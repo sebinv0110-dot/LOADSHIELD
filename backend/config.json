@@ -1,0 +1,21 @@
+{
+  "servers": [
+    {
+      "name": "Server A",
+      "url": "http://localhost:3001"
+    },
+    {
+      "name": "Server B",
+      "url": "http://localhost:3002"
+    },
+    {
+      "name": "Server C",
+      "url": "http://localhost:3003"
+    }
+  ],
+  "thresholds": {
+    "warning": 60,
+    "highLoad": 80,
+    "critical": 90
+  }
+}
