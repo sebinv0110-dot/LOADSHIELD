@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>LOADSHIELD — Predict. Prepare. Protect.</title>
+  <meta name="theme-color" content="#050b18">
+  <meta name="description" content="LOADSHIELD — Predictive & Adaptive Traffic Management System">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+
+<body>
+
+<!-- Background effects -->
+<div class="background-grid"></div>
+<div class="glow glow-one"></div>
+<div class="glow glow-two"></div>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+  <div class="brand">
+
+    <div class="brand-icon">
+      LS
+    </div>
+
+    <div>
+      <h1>LOAD<span>SHIELD</span></h1>
+      <p>Predictive & Adaptive Traffic Management</p>
+    </div>
+
+  </div>
+
+
+  <div class="header-right">
+
+    <div class="live-indicator">
+      <span class="pulse-dot"></span>
+      LIVE SYSTEM
+    </div>
+
+    <div class="system-online">
+      ● SYSTEM ONLINE
+    </div>
+
+  </div>
+
+</header>
+
+
+
+<!-- =========================
+     MAIN DASHBOARD
+========================= -->
+
+<main class="dashboard">
+
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <div class="hero-content">
+
+      <div class="hero-badge">
+        <span></span>
+        EDGE TRAFFIC INTELLIGENCE
+      </div>
+
+      <h2>
+        Predict.
+        <span>Prepare.</span>
+        Protect.
+      </h2>
+
+      <p>
+        Intelligent traffic management that predicts overload,
+        protects backend services and keeps critical applications available.
+      </p>
+
+    </div>
+
+
+    <div class="hero-status">
+
+      <div class="status-ring">
+        <div class="ring-inner">
+          <span id="heroStatus">NORMAL</span>
+          <small>SYSTEM</small>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =========================
+       KEY METRICS
+  ========================= -->
+
+  <section class="metrics-section">
+
+    <div class="metric-card">
+
+      <div class="metric-top">
+        <span class="metric-label">REQUESTS / SEC</span>
+        <span class="metric-icon">↗</span>
+      </div>
+
+      <p id="requestsPerSecond">0</p>
+
+      <div class="metric-footer">
+        <span class="live-line"></span>
+        Live traffic
+      </div>
+
+    </div>
+
+
+    <div class="metric-card">
+
+      <div class="metric-top">
+        <span class="metric-label">ACTIVE USERS</span>
+        <span class="metric-icon">◉</span>
+      </div>
+
+      <p id="activeUsers">0</p>
+
+      <div class="metric-footer">
+        <span class="live-line"></span>
+        Connected users
+      </div>
+
+    </div>
+
+
+    <div class="metric-card">
+
+      <div class="metric-top">
+        <span class="metric-label">RESPONSE TIME</span>
+        <span class="metric-icon">◷</span>
+      </div>
+
+      <p id="responseTime">0 ms</p>
+
+      <div class="metric-footer">
+        <span class="live-line"></span>
+        Server latency
+      </div>
+
+    </div>
+
+
+    <div class="metric-card">
+
+      <div class="metric-top">
+        <span class="metric-label">ERROR RATE</span>
+        <span class="metric-icon">!</span>
+      </div>
+
+      <p id="errorRate">0%</p>
+
+      <div class="metric-footer">
+        <span class="live-line"></span>
+        Request failures
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =========================
+       SERVER HEALTH
+  ========================= -->
+
+  <section class="section">
+
+    <div class="section-heading">
+
+      <div>
+        <span class="section-number">01</span>
+        <h2>SERVER HEALTH</h2>
+      </div>
+
+      <span class="section-description">
+                Real-time infrastructure load
+            </span>
+
+    </div>
+
+
+    <div class="server-container">
+
+
+      <!-- SERVER A -->
+
+      <div class="server-card">
+
+        <div class="server-header">
+
+          <div class="server-title">
+            <div class="server-status-dot"></div>
+
+            <div>
+              <h3>SERVER A</h3>
+              <span>NODE-01</span>
+            </div>
+          </div>
+
+          <span class="server-badge" id="serverAStatus">
+                        NORMAL
+                    </span>
+
+        </div>
+
+
+        <div class="server-load">
+
+          <div class="load-heading">
+            <span>SERVER LOAD</span>
+            <strong id="serverALoad">0%</strong>
+          </div>
+
+          <div class="progress-bar">
+            <div id="serverAProgress"></div>
+          </div>
+
+        </div>
+
+        <div class="server-footer">
+          <span>● Operational</span>
+          <span>LoadShield monitored</span>
+        </div>
+
+      </div>
+
+
+
+      <!-- SERVER B -->
+
+      <div class="server-card">
+
+        <div class="server-header">
+
+          <div class="server-title">
+            <div class="server-status-dot"></div>
+
+            <div>
+              <h3>SERVER B</h3>
+              <span>NODE-02</span>
+            </div>
+          </div>
+
+          <span class="server-badge" id="serverBStatus">
+                        NORMAL
+                    </span>
+
+        </div>
+
+
+        <div class="server-load">
+
+          <div class="load-heading">
+            <span>SERVER LOAD</span>
+            <strong id="serverBLoad">0%</strong>
+          </div>
+
+          <div class="progress-bar">
+            <div id="serverBProgress"></div>
+          </div>
+
+        </div>
+
+        <div class="server-footer">
+          <span>● Operational</span>
+          <span>LoadShield monitored</span>
+        </div>
+
+      </div>
+
+
+
+      <!-- SERVER C -->
+
+      <div class="server-card">
+
+        <div class="server-header">
+
+          <div class="server-title">
+            <div class="server-status-dot"></div>
+
+            <div>
+              <h3>SERVER C</h3>
+              <span>NODE-03</span>
+            </div>
+          </div>
+
+          <span class="server-badge" id="serverCStatus">
+                        NORMAL
+                    </span>
+
+        </div>
+
+
+        <div class="server-load">
+
+          <div class="load-heading">
+            <span>SERVER LOAD</span>
+            <strong id="serverCLoad">0%</strong>
+          </div>
+
+          <div class="progress-bar">
+            <div id="serverCProgress"></div>
+          </div>
+
+        </div>
+
+        <div class="server-footer">
+          <span>● Operational</span>
+          <span>LoadShield monitored</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =========================
+       LOADSHIELD INTELLIGENCE
+  ========================= -->
+
+  <section class="section">
+
+    <div class="section-heading">
+
+      <div>
+        <span class="section-number">02</span>
+        <h2>LOADSHIELD INTELLIGENCE</h2>
+      </div>
+
+      <span class="section-description">
+                Predictive decision engine
+            </span>
+
+    </div>
+
+
+    <div class="intelligence-grid">
+
+
+      <!-- SYSTEM STATUS -->
+
+      <div class="intelligence-card main-status-card">
+
+        <div class="card-label">
+          SYSTEM STATUS
+        </div>
+
+        <div class="large-status" id="systemStatus">
+          NORMAL
+        </div>
+
+        <div class="status-line"></div>
+
+        <p>
+          LoadShield continuously evaluates traffic
+          and infrastructure conditions.
+        </p>
+
+      </div>
+
+
+      <!-- OVERLOAD -->
+
+      <div class="intelligence-card">
+
+        <div class="card-label">
+          OVERLOAD PREDICTION
+        </div>
+
+        <div class="prediction-icon">
+          ◉
+        </div>
+
+        <div class="prediction-value" id="overloadRisk">
+          NO RISK
+        </div>
+
+        <p>
+          Predictive traffic analysis
+        </p>
+
+      </div>
+
+
+      <!-- BOTTLENECK -->
+
+      <div class="intelligence-card">
+
+        <div class="card-label">
+          BOTTLENECK
+        </div>
+
+        <div class="bottleneck-icon">
+          ⚠
+        </div>
+
+        <div class="prediction-value" id="bottleneck">
+          NONE
+        </div>
+
+        <p>
+          Highest load detected
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =========================
+       TRAFFIC CONTROL
+  ========================= -->
+
+  <section class="section">
+
+    <div class="section-heading">
+
+      <div>
+        <span class="section-number">03</span>
+        <h2>TRAFFIC CONTROL</h2>
+      </div>
+
+      <span class="section-description">
+                Adaptive routing decisions
+            </span>
+
+    </div>
+
+
+    <div class="control-panel">
+
+
+      <div class="control-main">
+
+        <div class="control-icon">
+          ⇄
+        </div>
+
+        <div>
+
+                    <span class="card-label">
+                        CURRENT ACTION
+                    </span>
+
+          <p id="trafficAction">
+            NORMAL ROUTING
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="control-info">
+
+        <div>
+          <span>DECISION</span>
+
+          <strong id="trafficDecision">
+            Normal traffic distribution
+          </strong>
+        </div>
+
+
+        <div>
+          <span>REASON</span>
+
+          <strong id="trafficReason">
+            All servers operating normally
+          </strong>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =========================
+       WAITING ROOM
+  ========================= -->
+
+  <section class="section">
+
+    <div class="section-heading">
+
+      <div>
+        <span class="section-number">04</span>
+        <h2>VIRTUAL WAITING ROOM</h2>
+      </div>
+
+      <span class="section-description">
+                Controlled traffic admission
+            </span>
+
+    </div>
+
+
+    <div class="queue-panel">
+
+
+      <div class="queue-card">
+
+        <span class="card-label">STATUS</span>
+
+        <div class="queue-value" id="queueStatus">
+          INACTIVE
+        </div>
+
+      </div>
+
+
+      <div class="queue-card">
+
+        <span class="card-label">USERS IN QUEUE</span>
+
+        <div class="queue-value" id="queueSize">
+          0
+        </div>
+
+      </div>
+
+
+      <div class="queue-card">
+
+        <span class="card-label">YOUR POSITION</span>
+
+        <div class="queue-value" id="queuePosition">
+          -
+        </div>
+
+      </div>
+
+
+      <div class="queue-card">
+
+        <span class="card-label">ESTIMATED WAIT</span>
+
+        <div class="queue-value" id="estimatedWait">
+          0 sec
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =========================
+       SYSTEM FLOW
+  ========================= -->
+
+  <section class="section">
+
+    <div class="section-heading">
+
+      <div>
+        <span class="section-number">05</span>
+        <h2>SYSTEM FLOW</h2>
+      </div>
+
+      <span class="section-description">
+                Request processing pipeline
+            </span>
+
+    </div>
+
+
+    <div class="flow">
+
+      <div class="flow-box active-flow">
+        <span>01</span>
+        USERS
+      </div>
+
+      <div class="flow-arrow">→</div>
+
+      <div class="flow-box">
+        <span>02</span>
+        LOADSHIELD
+      </div>
+
+      <div class="flow-arrow">→</div>
+
+      <div class="flow-box">
+        <span>03</span>
+        ANALYZE
+      </div>
+
+      <div class="flow-arrow">→</div>
+
+      <div class="flow-box">
+        <span>04</span>
+        DECIDE
+      </div>
+
+      <div class="flow-arrow">→</div>
+
+      <div class="flow-box">
+        <span>05</span>
+        SERVER A / B / C
+      </div>
+
+      <div class="flow-arrow">→</div>
+
+      <div class="flow-box">
+        <span>06</span>
+        RESPONSE
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =========================
+       LIVE EVENTS
+  ========================= -->
+
+  <section class="section">
+
+    <div class="section-heading">
+
+      <div>
+        <span class="section-number">06</span>
+        <h2>LIVE SYSTEM EVENTS</h2>
+      </div>
+
+      <span class="section-description">
+                Real-time activity stream
+            </span>
+
+    </div>
+
+
+    <div class="events-panel">
+
+      <div id="eventList">
+
+        <div class="event">
+
+                    <span class="event-time">
+                        --:--:--
+                    </span>
+
+          <span class="event-message">
+                        System ready
+                    </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =========================
+       DEMO CONTROLS
+  ========================= -->
+
+  <section class="demo-section">
+
+    <div class="demo-title">
+      <span>DEMONSTRATION MODE</span>
+      <small>Simulated traffic environment</small>
+    </div>
+
+
+    <div class="demo-buttons">
+
+      <button id="startDemo" class="btn btn-primary">
+        <span>▶</span>
+        START DEMO
+      </button>
+
+      <button id="stopDemo" class="btn btn-secondary">
+        <span>Ⅱ</span>
+        STOP DEMO
+      </button>
+
+      <button id="resetDemo" class="btn btn-secondary">
+        <span>↻</span>
+        RESET
+      </button>
+
+    </div>
+
+  </section>
+
+
+</main>
+
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer class="footer">
+
+  <div>
+    LOADSHIELD
+  </div>
+
+  <span>
+        Predictive & Adaptive Traffic Management System
+    </span>
+
+  <span>
+        Predict. Prepare. Protect.
+    </span>
+
+</footer>
+
+
+<script src="dashboard.js"></script>
+
+</body>
+</html>
