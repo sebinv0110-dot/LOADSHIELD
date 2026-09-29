@@ -98,6 +98,8 @@ const heroStatus =
 const demoData = [
 
     {
+        source: "DEMO",
+
         requestsPerSecond: 500,
         activeUsers: 180,
         responseTime: 120,
@@ -123,6 +125,8 @@ const demoData = [
 
 
     {
+        source: "DEMO",
+
         requestsPerSecond: 1200,
         activeUsers: 450,
         responseTime: 220,
@@ -148,6 +152,8 @@ const demoData = [
 
 
     {
+        source: "DEMO",
+
         requestsPerSecond: 2500,
         activeUsers: 850,
         responseTime: 420,
@@ -173,6 +179,8 @@ const demoData = [
 
 
     {
+        source: "DEMO",
+
         requestsPerSecond: 4000,
         activeUsers: 1500,
         responseTime: 780,
@@ -198,6 +206,8 @@ const demoData = [
 
 
     {
+        source: "DEMO",
+
         requestsPerSecond: 1800,
         activeUsers: 700,
         responseTime: 300,
@@ -223,6 +233,8 @@ const demoData = [
 
 
     {
+        source: "DEMO",
+
         requestsPerSecond: 500,
         activeUsers: 180,
         responseTime: 120,
@@ -301,32 +313,103 @@ function updateServer(
     loadElement,
     progressElement,
     statusElement,
-    load
+    loadOrInfo
 ) {
 
-    loadElement.textContent = load + "%";
+    // -------------------------
+    // DEMO MODE
+    // -------------------------
 
-    progressElement.style.width = load + "%";
+    if (typeof loadOrInfo === "number") {
 
-    const status = getServerStatus(load);
+        const load =
+            Math.max(
+                0,
+                Math.min(100, loadOrInfo)
+            );
 
-    statusElement.textContent = status;
+        loadElement.textContent =
+            load + "%";
 
-    const color = getServerColor(load);
+        progressElement.style.width =
+            load + "%";
 
-    progressElement.style.background = color;
+        const status =
+            getServerStatus(load);
+
+        statusElement.textContent =
+            status;
+
+        const color =
+            getServerColor(load);
+
+        progressElement.style.background =
+            color;
+
+        progressElement.style.boxShadow =
+            `0 0 15px ${color}`;
+
+        statusElement.style.color =
+            color;
+
+        statusElement.style.background =
+            `${color}14`;
+
+        statusElement.style.borderColor =
+            `${color}35`;
+
+        return;
+    }
+
+
+    // -------------------------
+    // BACKEND MODE
+    // -------------------------
+
+    const info =
+        loadOrInfo || {};
+
+    const isHealthy =
+        String(info.status || "")
+            .toLowerCase() === "healthy";
+
+    const color =
+        isHealthy
+            ? "#35e58a"
+            : "#ff5364";
+
+    /*
+     * Person 1 backend currently
+     * reports health status only.
+     * It does not report numeric
+     * CPU/load percentage.
+     */
+
+    loadElement.textContent =
+        "—";
+
+    progressElement.style.width =
+        "0%";
+
+    progressElement.style.background =
+        color;
 
     progressElement.style.boxShadow =
         `0 0 15px ${color}`;
 
-    statusElement.style.color = color;
+    statusElement.textContent =
+        isHealthy
+            ? "ONLINE"
+            : "OFFLINE";
+
+    statusElement.style.color =
+        color;
 
     statusElement.style.background =
         `${color}14`;
 
     statusElement.style.borderColor =
         `${color}35`;
-
 }
 
 
@@ -379,24 +462,33 @@ function updateSystemStatus(status) {
 
     if (heroStatus) {
 
-        heroStatus.textContent = status;
+        heroStatus.textContent =
+            status;
 
         heroStatus.className = "";
 
         if (status === "NORMAL") {
-            heroStatus.style.color = "#35e58a";
+
+            heroStatus.style.color =
+                "#35e58a";
         }
 
         else if (status === "WARNING") {
-            heroStatus.style.color = "#f5c451";
+
+            heroStatus.style.color =
+                "#f5c451";
         }
 
         else if (status === "HIGH LOAD") {
-            heroStatus.style.color = "#ff914d";
+
+            heroStatus.style.color =
+                "#ff914d";
         }
 
         else {
-            heroStatus.style.color = "#ff5364";
+
+            heroStatus.style.color =
+                "#ff5364";
         }
 
     }
@@ -410,22 +502,60 @@ function updateSystemStatus(status) {
 
 function updateDashboard(data) {
 
-
     // -------------------------
     // MAIN METRICS
     // -------------------------
 
+    const rps =
+        Number(data.requestsPerSecond);
+
     requestsPerSecond.textContent =
-        data.requestsPerSecond.toLocaleString();
+        Number.isFinite(rps)
+            ? rps.toLocaleString()
+            : "—";
+
+
+    const users =
+        Number(data.activeUsers);
 
     activeUsers.textContent =
-        data.activeUsers.toLocaleString();
+        Number.isFinite(users)
+            ? users.toLocaleString()
+            : "—";
 
-    responseTime.textContent =
-        data.responseTime + " ms";
 
-    errorRate.textContent =
-        data.errorRate + "%";
+    if (
+        data.responseTime === "—" ||
+        data.responseTime === null ||
+        data.responseTime === undefined
+    ) {
+
+        responseTime.textContent =
+            "—";
+
+    }
+    else {
+
+        responseTime.textContent =
+            data.responseTime + " ms";
+    }
+
+
+    if (
+        data.errorRate === "—" ||
+        data.errorRate === null ||
+        data.errorRate === undefined
+    ) {
+
+        errorRate.textContent =
+            "—";
+
+    }
+    else {
+
+        errorRate.textContent =
+            data.errorRate + "%";
+    }
 
 
     // -------------------------
@@ -483,44 +613,110 @@ function updateDashboard(data) {
         data.action;
 
 
-    if (data.systemStatus === "NORMAL") {
+    if (data.source === "BACKEND") {
 
-        trafficDecision.textContent =
-            "Normal traffic distribution";
+        if (
+            data.systemStatus ===
+            "NORMAL"
+        ) {
 
-        trafficReason.textContent =
-            "All servers operating normally";
+            trafficDecision.textContent =
+                "Normal routing";
+
+            trafficReason.textContent =
+                "All registered servers are healthy";
+        }
+
+        else if (
+            data.systemStatus ===
+            "WARNING"
+        ) {
+
+            trafficDecision.textContent =
+                "Avoid unhealthy server";
+
+            trafficReason.textContent =
+                data.bottleneck +
+                " is offline";
+        }
+
+        else if (
+            data.systemStatus ===
+            "CRITICAL"
+        ) {
+
+            trafficDecision.textContent =
+                "Protect backend availability";
+
+            trafficReason.textContent =
+                "All registered servers are offline";
+        }
+
+        else {
+
+            trafficDecision.textContent =
+                "Backend health monitoring";
+
+            trafficReason.textContent =
+                "Waiting for monitoring data";
+        }
 
     }
 
-    else if (data.systemStatus === "WARNING") {
+    else {
 
-        trafficDecision.textContent =
-            "Continue monitoring traffic";
+        // -------------------------
+        // EXISTING DEMO BEHAVIOUR
+        // -------------------------
 
-        trafficReason.textContent =
-            "Traffic increase detected";
+        if (
+            data.systemStatus ===
+            "NORMAL"
+        ) {
 
-    }
+            trafficDecision.textContent =
+                "Normal traffic distribution";
 
-    else if (data.systemStatus === "HIGH LOAD") {
+            trafficReason.textContent =
+                "All servers operating normally";
+        }
 
-        trafficDecision.textContent =
-            "Redirect traffic";
+        else if (
+            data.systemStatus ===
+            "WARNING"
+        ) {
 
-        trafficReason.textContent =
-            data.bottleneck +
-            " is under high load";
+            trafficDecision.textContent =
+                "Continue monitoring traffic";
 
-    }
+            trafficReason.textContent =
+                "Traffic increase detected";
+        }
 
-    else if (data.systemStatus === "CRITICAL") {
+        else if (
+            data.systemStatus ===
+            "HIGH LOAD"
+        ) {
 
-        trafficDecision.textContent =
-            "Activate waiting room";
+            trafficDecision.textContent =
+                "Redirect traffic";
 
-        trafficReason.textContent =
-            "All available servers are heavily loaded";
+            trafficReason.textContent =
+                data.bottleneck +
+                " is under high load";
+        }
+
+        else if (
+            data.systemStatus ===
+            "CRITICAL"
+        ) {
+
+            trafficDecision.textContent =
+                "Activate waiting room";
+
+            trafficReason.textContent =
+                "All available servers are heavily loaded";
+        }
 
     }
 
@@ -538,12 +734,26 @@ function updateDashboard(data) {
     queuePosition.textContent =
         data.queuePosition;
 
-    estimatedWait.textContent =
-        data.estimatedWait + " sec";
+
+    if (
+        data.estimatedWait === "—" ||
+        data.estimatedWait === null ||
+        data.estimatedWait === undefined
+    ) {
+
+        estimatedWait.textContent =
+            "—";
+
+    }
+    else {
+
+        estimatedWait.textContent =
+            data.estimatedWait + " sec";
+    }
 
 
     // -------------------------
-    // EVENT
+    // LIVE EVENT
     // -------------------------
 
     addEventForState(data);
@@ -557,15 +767,19 @@ function updateDashboard(data) {
 
 function addEvent(message) {
 
-    const now = new Date();
+    const now =
+        new Date();
 
     const time =
         now.toLocaleTimeString();
 
+
     const event =
         document.createElement("div");
 
-    event.className = "event";
+    event.className =
+        "event";
+
 
     event.innerHTML = `
         <span class="event-time">
@@ -577,10 +791,16 @@ function addEvent(message) {
         </span>
     `;
 
-    eventList.prepend(event);
+
+    eventList.prepend(
+        event
+    );
 
 
-    while (eventList.children.length > 8) {
+    while (
+        eventList.children.length >
+        8
+    ) {
 
         eventList.removeChild(
             eventList.lastChild
@@ -601,20 +821,80 @@ let lastEventState = "";
 function addEventForState(data) {
 
     const currentState =
+        data.source +
+        "-" +
         data.systemStatus +
         "-" +
-        data.action;
+        data.action +
+        "-" +
+        data.bottleneck;
 
 
-    if (currentState === lastEventState) {
+    if (
+        currentState ===
+        lastEventState
+    ) {
+
         return;
     }
 
 
-    lastEventState = currentState;
+    lastEventState =
+        currentState;
 
 
-    if (data.systemStatus === "NORMAL") {
+    // -------------------------
+    // BACKEND EVENTS
+    // -------------------------
+
+    if (
+        data.source ===
+        "BACKEND"
+    ) {
+
+        if (
+            data.systemStatus ===
+            "NORMAL"
+        ) {
+
+            addEvent(
+                "All backend servers are healthy"
+            );
+        }
+
+        else if (
+            data.systemStatus ===
+            "WARNING"
+        ) {
+
+            addEvent(
+                data.bottleneck +
+                " is unavailable"
+            );
+        }
+
+        else if (
+            data.systemStatus ===
+            "CRITICAL"
+        ) {
+
+            addEvent(
+                "All backend servers are unavailable"
+            );
+        }
+
+        return;
+    }
+
+
+    // -------------------------
+    // DEMO EVENTS
+    // -------------------------
+
+    if (
+        data.systemStatus ===
+        "NORMAL"
+    ) {
 
         addEvent(
             "System operating normally"
@@ -622,7 +902,10 @@ function addEventForState(data) {
 
     }
 
-    else if (data.systemStatus === "WARNING") {
+    else if (
+        data.systemStatus ===
+        "WARNING"
+    ) {
 
         addEvent(
             "Traffic increase detected"
@@ -630,7 +913,10 @@ function addEventForState(data) {
 
     }
 
-    else if (data.systemStatus === "HIGH LOAD") {
+    else if (
+        data.systemStatus ===
+        "HIGH LOAD"
+    ) {
 
         addEvent(
             "High server load detected"
@@ -638,7 +924,10 @@ function addEventForState(data) {
 
     }
 
-    else if (data.systemStatus === "CRITICAL") {
+    else if (
+        data.systemStatus ===
+        "CRITICAL"
+    ) {
 
         addEvent(
             "Critical overload risk detected"
@@ -689,9 +978,11 @@ function addEventForState(data) {
 // DEMO CONTROL
 // =========================================================
 
-let demoIndex = 0;
+let demoIndex =
+    0;
 
-let demoInterval = null;
+let demoInterval =
+    null;
 
 
 // =========================================================
@@ -700,40 +991,48 @@ let demoInterval = null;
 
 function startDemo() {
 
-    if (demoInterval !== null) {
+    if (
+        demoInterval !==
+        null
+    ) {
+
         return;
     }
 
 
-    demoIndex = 0;
+    demoIndex =
+        0;
 
-    lastEventState = "";
+    lastEventState =
+        "";
+
 
     updateDashboard(
         demoData[demoIndex]
     );
 
 
-    demoInterval = setInterval(() => {
+    demoInterval =
+        setInterval(() => {
 
-        demoIndex++;
-
-
-        if (
-            demoIndex >=
-            demoData.length
-        ) {
-
-            demoIndex = 0;
-
-        }
+            demoIndex++;
 
 
-        updateDashboard(
-            demoData[demoIndex]
-        );
+            if (
+                demoIndex >=
+                demoData.length
+            ) {
 
-    }, 3000);
+                demoIndex =
+                    0;
+            }
+
+
+            updateDashboard(
+                demoData[demoIndex]
+            );
+
+        }, 3000);
 
 }
 
@@ -744,11 +1043,19 @@ function startDemo() {
 
 function stopDemo() {
 
-    clearInterval(
-        demoInterval
-    );
+    if (
+        demoInterval !==
+        null
+    ) {
 
-    demoInterval = null;
+        clearInterval(
+            demoInterval
+        );
+    }
+
+
+    demoInterval =
+        null;
 
 }
 
@@ -761,9 +1068,12 @@ function resetDemo() {
 
     stopDemo();
 
-    demoIndex = 0;
+    demoIndex =
+        0;
 
-    lastEventState = "";
+    lastEventState =
+        "";
+
 
     updateDashboard(
         demoData[0]
@@ -804,59 +1114,479 @@ document
 // BACKEND API
 // =========================================================
 
+// Person 1 backend endpoint
 const API_URL =
-    "http://localhost:3000/api/status";
+    "http://localhost:3000/api/dashboard";
 
+
+// Used to calculate approximate RPS
+// from the gateway's totalRequests value.
+let previousTotalRequests =
+    null;
+
+let previousRequestTimestamp =
+    null;
+
+
+// Prevent console flooding.
+let backendFailureLogged =
+    false;
+
+
+// =========================================================
+// BACKEND DATA ADAPTER
+// =========================================================
+
+function normalizeBackendData(
+    rawData
+) {
+
+    const serverList =
+        Array.isArray(
+            rawData.servers
+        )
+            ? rawData.servers
+            : [];
+
+
+    const serverMap = {};
+
+
+    serverList.forEach(
+        server => {
+
+            const match =
+                String(
+                    server.name ||
+                    ""
+                )
+                    .match(
+                        /Server\s+([ABC])/i
+                    );
+
+
+            if (!match) {
+                return;
+            }
+
+
+            const key =
+                match[1]
+                    .toUpperCase();
+
+
+            serverMap[key] = {
+
+                status:
+                    String(
+                        server.status ||
+                        ""
+                    )
+                        .toLowerCase()
+
+            };
+
+        }
+    );
+
+
+    const totalServers =
+        Number.isFinite(
+            Number(
+                rawData.totalServers
+            )
+        )
+            ? Number(
+                rawData.totalServers
+            )
+            : serverList.length;
+
+
+    const healthyServers =
+        Number.isFinite(
+            Number(
+                rawData.healthyServers
+            )
+        )
+            ? Number(
+                rawData.healthyServers
+            )
+            : serverList.filter(
+                server =>
+                    String(
+                        server.status ||
+                        ""
+                    )
+                        .toLowerCase() ===
+                    "healthy"
+            ).length;
+
+
+    // -------------------------
+    // SYSTEM STATE
+    // -------------------------
+
+    let systemStatus =
+        "NORMAL";
+
+
+    if (
+        totalServers > 0 &&
+        healthyServers === 0
+    ) {
+
+        systemStatus =
+            "CRITICAL";
+    }
+
+    else if (
+        totalServers > 0 &&
+        healthyServers <
+        totalServers
+    ) {
+
+        systemStatus =
+            "WARNING";
+    }
+
+
+    // -------------------------
+    // OFFLINE SERVERS
+    // -------------------------
+
+    const offlineNames =
+        serverList
+            .filter(
+                server =>
+                    String(
+                        server.status ||
+                        ""
+                    )
+                        .toLowerCase() !==
+                    "healthy"
+            )
+            .map(
+                server =>
+                    server.name
+            );
+
+
+    const bottleneck =
+        offlineNames.length > 0
+            ? offlineNames.join(
+                ", "
+            )
+            : "NONE";
+
+
+    // -------------------------
+    // RISK
+    // -------------------------
+
+    let overloadRisk =
+        "NO RISK";
+
+
+    if (
+        systemStatus ===
+        "WARNING"
+    ) {
+
+        overloadRisk =
+            "ATTENTION";
+    }
+
+
+    if (
+        systemStatus ===
+        "CRITICAL"
+    ) {
+
+        overloadRisk =
+            "CRITICAL RISK";
+    }
+
+
+    // -------------------------
+    // TRAFFIC ACTION
+    // -------------------------
+
+    let action =
+        "NORMAL ROUTING";
+
+
+    if (
+        systemStatus ===
+        "WARNING"
+    ) {
+
+        action =
+            "ROUTE AROUND OFFLINE SERVER";
+    }
+
+
+    if (
+        systemStatus ===
+        "CRITICAL"
+    ) {
+
+        action =
+            "PROTECT BACKEND AVAILABILITY";
+    }
+
+
+    // -------------------------
+    // TOTAL REQUESTS
+    // -------------------------
+
+    const totalRequests =
+        Number.isFinite(
+            Number(
+                rawData.totalRequests
+            )
+        )
+            ? Number(
+                rawData.totalRequests
+            )
+            : 0;
+
+
+    // -------------------------
+    // APPROXIMATE RPS
+    // -------------------------
+
+    const now =
+        performance.now();
+
+
+    let requestsPerSecondValue =
+        0;
+
+
+    if (
+        previousTotalRequests !== null &&
+        previousRequestTimestamp !== null
+    ) {
+
+        const elapsedSeconds =
+            (
+                now -
+                previousRequestTimestamp
+            ) / 1000;
+
+
+        const requestDelta =
+            totalRequests -
+            previousTotalRequests;
+
+
+        if (
+            elapsedSeconds > 0
+        ) {
+
+            requestsPerSecondValue =
+                Math.max(
+                    0,
+                    Math.round(
+                        requestDelta /
+                        elapsedSeconds
+                    )
+                );
+        }
+
+    }
+
+
+    previousTotalRequests =
+        totalRequests;
+
+    previousRequestTimestamp =
+        now;
+
+
+    // -------------------------
+    // NORMALIZED OBJECT
+    // -------------------------
+
+    return {
+
+        source:
+            "BACKEND",
+
+        requestsPerSecond:
+            requestsPerSecondValue,
+
+        // Person 1 does not provide
+        // these metrics yet.
+        activeUsers:
+            "—",
+
+        responseTime:
+            "—",
+
+        errorRate:
+            "—",
+
+
+        systemStatus:
+            systemStatus,
+
+        overloadRisk:
+            overloadRisk,
+
+        bottleneck:
+            bottleneck,
+
+        action:
+            action,
+
+
+        // Person 4 will provide these
+        // during later integration.
+        queueStatus:
+            "NOT REPORTED",
+
+        queueSize:
+            "—",
+
+        queuePosition:
+            "—",
+
+        estimatedWait:
+            "—",
+
+
+        servers: {
+
+            A:
+                serverMap.A ||
+                {
+                    status:
+                        "offline"
+                },
+
+            B:
+                serverMap.B ||
+                {
+                    status:
+                        "offline"
+                },
+
+            C:
+                serverMap.C ||
+                {
+                    status:
+                        "offline"
+                }
+
+        }
+
+    };
+
+}
+
+
+// =========================================================
+// FETCH BACKEND DATA
+// =========================================================
 
 async function fetchBackendData() {
+
+    // Do not allow backend polling
+    // to overwrite Demo Mode.
+    if (
+        demoInterval !== null
+    ) {
+
+        return;
+    }
+
 
     try {
 
         const response =
-            await fetch(API_URL);
+            await fetch(
+                API_URL,
+                {
+                    method: "GET",
+                    cache: "no-store"
+                }
+            );
 
 
-        if (!response.ok) {
+        if (
+            !response.ok
+        ) {
 
             throw new Error(
-                "Backend response error"
+                "Backend response error: HTTP " +
+                response.status
             );
 
         }
 
 
-        const data =
+        const rawData =
             await response.json();
 
 
-        updateDashboard(data);
+        const dashboardData =
+            normalizeBackendData(
+                rawData
+            );
+
+
+        updateDashboard(
+            dashboardData
+        );
+
+
+        backendFailureLogged =
+            false;
 
 
         console.log(
             "Backend data received:",
-            data
+            rawData
         );
 
     }
 
     catch (error) {
 
-        console.log(
-            "Backend is not connected yet."
-        );
+        // Keep the dashboard running
+        // even if backend temporarily stops.
+        if (
+            !backendFailureLogged
+        ) {
+
+            console.warn(
+                "LoadShield backend unavailable:",
+                error
+            );
+
+            backendFailureLogged =
+                true;
+        }
 
     }
 
 }
 
 
-// Check backend every 2 seconds
-// Backend polling disabled temporarily.
-// Will be enabled when Person 1's backend is connected.
+// =========================================================
+// BACKEND POLLING
+// =========================================================
 
-// setInterval(() => {
-//     fetchBackendData();
-// }, 2000);
+setInterval(
+    () => {
+
+        fetchBackendData();
+
+    },
+    2000
+);
+
 
 // =========================================================
 // INITIAL STATE

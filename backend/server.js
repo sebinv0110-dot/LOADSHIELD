@@ -1,5 +1,10 @@
 const http = require("http");
 const config = require("./config.json");
+function setCorsHeaders(res) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+}
 const { getNextServer } = require("./router");
 const { forwardRequest } = require("./gateway");
 const { chooseHealthyServer, requestCounts } = require("./decision");
@@ -7,6 +12,13 @@ const { chooseHealthyServer, requestCounts } = require("./decision");
 let totalRequests = 0;
 
 const server = http.createServer(async (req, res) => {
+  setCorsHeaders(res);
+
+  if (req.method === "OPTIONS") {
+    res.writeHead(204);
+    res.end();
+    return;
+  }
 
   // Count only actual LoadShield traffic
   if (req.url === "/api/request" && req.method === "GET") {
